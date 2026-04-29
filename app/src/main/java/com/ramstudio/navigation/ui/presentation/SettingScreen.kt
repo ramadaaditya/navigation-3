@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ProfileScreen() {
+fun SettingScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -20,7 +20,7 @@ fun ProfileScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Ini Layar Profile")
+        Text("Ini Layar Settings")
         Button(onClick = {}) { Text("Kembali") }
     }
 }

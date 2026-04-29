@@ -22,19 +22,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import com.ramstudio.navigation.ui.navigation.AppDestinations
+import com.ramstudio.navigation.ui.navigation.DetailNavKey
+import com.ramstudio.navigation.ui.navigation.FavoriteNavKey
+import com.ramstudio.navigation.ui.navigation.HomeNavKey
 import com.ramstudio.navigation.ui.navigation.NavigationState
 import com.ramstudio.navigation.ui.navigation.Navigator
+import com.ramstudio.navigation.ui.navigation.ProfileNavKey
+import com.ramstudio.navigation.ui.navigation.SettingsNavKey
 import com.ramstudio.navigation.ui.navigation.TOP_LEVEL_NAV_ITEMS
 import com.ramstudio.navigation.ui.navigation.toEntries
+import com.ramstudio.navigation.ui.presentation.DetailScreen
+import com.ramstudio.navigation.ui.presentation.FavoriteScreen
+import com.ramstudio.navigation.ui.presentation.HomeScreen
+import com.ramstudio.navigation.ui.presentation.ProfileScreen
+import com.ramstudio.navigation.ui.presentation.SettingScreen
 
 
 @Composable
 fun Navigation3App(
     navState: NavigationState
 ) {
-    val currentDestination = TOP_LEVEL_NAV_ITEMS[navState.topLevelRoute]
+    val currentDestination = TOP_LEVEL_NAV_ITEMS[navState.topLevelRoute] ?: AppDestinations.HOME
 
-    val navigator = remember { Navigator(navState) }
+    val navigator = remember(navState) { Navigator(navState) }
 
     NavigationSuiteScaffold( //Dynamic Suite Scaffold
         navigationSuiteItems = {
@@ -76,9 +87,36 @@ fun Navigation3App(
                         navigator.goBack()
                     },
                     entries = navState.toEntries { key ->
-                        val destination = TOP_LEVEL_NAV_ITEMS[key]
-                        NavEntry(key) {
-                            PlaceholderScreen(text = destination?.label ?: "Unknown")
+                        when (key) {
+                            is HomeNavKey -> NavEntry(key) {
+                                HomeScreen(
+                                    onNavigateToDetail = { id ->
+                                        navigator.navigate(DetailNavKey(id))
+                                    }
+                                )
+                            }
+
+                            is ProfileNavKey -> NavEntry(key) {
+                                ProfileScreen()
+                            }
+
+                            is FavoriteNavKey -> NavEntry(key) {
+                                FavoriteScreen(
+                                    onNavigateToProfile = {}
+                                )
+                            }
+
+                            is SettingsNavKey -> NavEntry(key) {
+                                SettingScreen()
+                            }
+
+                            is DetailNavKey -> NavEntry(key) {
+                                DetailScreen(id = key.id)
+                            }
+
+                            else -> NavEntry(key) {
+                                Text("Unknown")
+                            }
                         }
                     }
                 )

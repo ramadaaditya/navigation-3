@@ -14,3 +14,9 @@ data class ProfileNavKey(val userId: String?) : NavKey
 
 @Serializable
 data object SettingsNavKey : NavKey
+
+
+@Serializable
+data class DetailNavKey(val id: String) : NavKey
+
+
